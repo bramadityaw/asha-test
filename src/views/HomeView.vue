@@ -1,9 +1,12 @@
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
+import axios from 'axios';
+
+axios.get('https://pokeapi.co/api/v2/pokemon?offset=0')
+  .then(res => res.data)
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <p>{{ hello }}</p>
   </main>
 </template>
