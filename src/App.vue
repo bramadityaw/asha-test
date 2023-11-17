@@ -21,7 +21,7 @@ const title = ref('PokeDex Web')
     padding: 1rem 1rem;
     border-radius: 25px;
     min-width: 80dvh;
-    margin-top: 1rem;
+    margin: 1rem;
   }
 
   .title {

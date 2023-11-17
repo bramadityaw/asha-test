@@ -4,11 +4,6 @@ import PokemonImage from './PokemonImage.vue'
 import PokemonDetails from './PokemonDetails.vue'
 
 const pokemonList = ref([])
-const date = new Date()
-
-function toggleFavorite(pokemon) {
-  pokemon.isFavorite = !pokemon.isFavorite
-}
 
 onMounted(async () => {
   const pokedexData = await fetch('https://pokeapi.co/api/v2/pokedex/1').then((response) =>
@@ -17,9 +12,16 @@ onMounted(async () => {
 
   pokemonList.value = pokedexData.pokemon_entries.map((pokemon) => ({
     ...pokemon,
-    isFavorite: false
+    isFavorite: false,
+    dateFavorited: Date
   }))
 })
+
+function toggleFavorite(pokemon) {
+  pokemon.isFavorite = !pokemon.isFavorite
+  const date = new Date()
+  pokemon.dateFavorited = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+}
 </script>
 <template>
   <div style="columns: 2; max-width: 1020px; margin: 0 auto">
@@ -40,7 +42,7 @@ onMounted(async () => {
           <PokemonDetails :entry="pokemon.entry_number"></PokemonDetails>
           <div v-if="pokemon.isFavorite" class="fav_marker inline_img">
             <img src="/src/assets/star.webp" alt="Favorite" />
-            <span>{{ date.toDateString() }} {{ date.toLocaleTimeString() }}</span>
+            <span>{{ pokemon.dateFavorited }}</span>
           </div>
         </div>
         <div id="actions">
@@ -59,6 +61,7 @@ onMounted(async () => {
 </template>
 <style scoped>
 .card {
+  min-height: 178px;
   min-width: 240px;
   border-radius: 25px;
   border: 2px solid grey;
@@ -123,6 +126,6 @@ onMounted(async () => {
 }
 
 .fav_marker img {
-  margin-right: .5rem;
+  margin-right: 0.5rem;
 }
 </style>

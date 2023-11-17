@@ -18,7 +18,7 @@ onMounted( async () => {
 
 </script>
 <template>
-  <div style="margin-bottom: 1.25rem; width: 100%;">
+  <div style="margin-bottom: 1.25rem; width: 50%;">
     <p>Type:</p>
     <ul>
       <li v-for="types in pokemonDetails.types" :key="types.slot">
