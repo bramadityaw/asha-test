@@ -1,47 +1,30 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { onMounted, ref } from 'vue'
+
+const hello = ref('Hello!')
+const pokemonList = ref([])
+
+onMounted(async () => {
+  const pokemonData = await (fetch('https://pokeapi.co/api/v2/pokedex/1'))
+  .then(response => response.json())
+  
+  pokemonList.value = pokemonData.pokemon_entries
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="bg-dark" style="padding: 1rem 1rem; border-radius: 25px;">
+    <h1>{{ hello }}</h1>
+    <p>{{pokemonList[0]}}</p>
+    <ul>
+      <li v-for="pokemon in pokemonList" :key="pokemon.entry_number">
+        ID: {{ pokemon.entry_number }}
+        Pokemon Name: {{ pokemon.pokemon_species.name }}
+      </li>
+    </ul>
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-}
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
 </style>
