@@ -13,6 +13,8 @@ onMounted( async () => {
 
   pokemonImageURL.value = pokemonData.sprites.front_default
 })
+
+pokemonImageURL.value = pokemonImageURL.value ? pokemonImageURL.value : '/src/assets/loader.svg'
 </script>
 <template>
   <img :src="pokemonImageURL" alt="">
