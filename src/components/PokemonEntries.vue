@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import PokemonImage from './PokemonImage.vue'
 import PokemonDetails from './PokemonDetails.vue'
 import RollingLoader from './RollingLoader.vue'
+import PokemonStatus from './PokemonStatus.vue'
 
 const pokemonList = ref([])
 
@@ -14,23 +15,31 @@ onMounted(async () => {
   pokemonList.value = pokedexData.pokemon_entries.map((pokemon) => ({
     ...pokemon,
     isFavorite: false,
-    dateFavorited: Date,
-    isCaptured: false
+    dateFavorited: '',
+    isCaptured: false,
+    dateCaptured: '',
+    dateReleased: '',
   }))
 })
 
 function toggleFavorite(pokemon) {
   pokemon.isFavorite = !pokemon.isFavorite
-  const date = new Date()
-  pokemon.dateFavorited = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+  if (pokemon.isFavorite) {
+    const date = new Date()
+    pokemon.dateFavorited = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+  }
 }
 
 function handlePokemonCapture(pokemon) {
   if (pokemon.isCaptured) {
     pokemon.isCaptured = false
+    const date = new Date()
+    pokemon.dateReleased = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
     return
   }
   pokemon.isCaptured = true
+  const date = new Date()
+  pokemon.dateCaptured = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
 }
 </script>
 <template>
@@ -52,10 +61,7 @@ function handlePokemonCapture(pokemon) {
         </div>
         <div style="display: flex">
           <PokemonDetails :entry="pokemon.entry_number"/>
-          <div v-if="pokemon.isFavorite" class="fav_marker inline_img">
-            <img src="/src/assets/star.webp" alt="Favorite" />
-            <span>{{ pokemon.dateFavorited }}</span>
-          </div>
+          <PokemonStatus :species="pokemon"/>
         </div>
         <div id="actions">
           <button class="button bg_purple" @click="handlePokemonCapture(pokemon)">
@@ -128,15 +134,5 @@ function handlePokemonCapture(pokemon) {
 .bg-white {
   background-color: white;
   color: black;
-}
-
-.fav_marker {
-  display: flex;
-  width: 128px;
-  margin-top: 1em;
-}
-
-.fav_marker img {
-  margin-right: 0.5rem;
 }
 </style>
