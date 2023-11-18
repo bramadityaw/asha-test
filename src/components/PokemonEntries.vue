@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue'
 import PokemonImage from './PokemonImage.vue'
 import PokemonDetails from './PokemonDetails.vue'
-import RollingLoader from './RollingLoader.vue'
 import PokemonStatus from './PokemonStatus.vue'
 
 const pokemonList = ref([])
@@ -18,7 +17,7 @@ onMounted(async () => {
     dateFavorited: '',
     isCaptured: false,
     dateCaptured: '',
-    dateReleased: '',
+    dateReleased: ''
   }))
 })
 
@@ -43,12 +42,10 @@ function handlePokemonCapture(pokemon) {
 }
 </script>
 <template>
-  <div v-if="pokemonList.length">
-    <h3 style="text-align: center">Click and hold the 'Catch!' button to capture Pokémon!</h3>
-    <div style="columns: 2; max-width: 1020px; margin: 0 auto">
-    <div v-for="pokemon in pokemonList" class="card bg-white" :key="pokemon.entry_number">
+  <div style="max-width: 520px; padding-top: 1.25rem;">
+    <div v-for="pokemon in pokemonList" class="card flex bg_white" :key="pokemon.entry_number">
       <div class="card_image">
-        <PokemonImage :entry="pokemon.entry_number"/>
+        <PokemonImage :entry="pokemon.entry_number" />
       </div>
       <div class="card-info">
         <div class="card_title">
@@ -60,8 +57,8 @@ function handlePokemonCapture(pokemon) {
           <span class="pokemon_id">ID: {{ pokemon.entry_number }}</span>
         </div>
         <div style="display: flex">
-          <PokemonDetails :entry="pokemon.entry_number"/>
-          <PokemonStatus :species="pokemon"/>
+          <PokemonDetails :entry="pokemon.entry_number" />
+          <PokemonStatus :species="pokemon" />
         </div>
         <div id="actions">
           <button class="button bg_purple" @click="handlePokemonCapture(pokemon)">
@@ -78,22 +75,8 @@ function handlePokemonCapture(pokemon) {
       </div>
     </div>
   </div>
-  </div>
-  <div v-else>
-    <RollingLoader/>
-  </div>
 </template>
 <style scoped>
-.card {
-  min-height: 178px;
-  min-width: 240px;
-  border-radius: 25px;
-  border: 2px solid grey;
-  padding: 1rem;
-  margin: 0 0.5rem 0.75rem;
-  display: flex;
-}
-
 .card .card_image {
   width: 40%;
 }
@@ -129,10 +112,5 @@ function handlePokemonCapture(pokemon) {
 
 #actions .button + .button {
   margin-left: 0.5rem;
-}
-
-.bg-white {
-  background-color: white;
-  color: black;
 }
 </style>

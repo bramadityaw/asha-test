@@ -24,10 +24,6 @@ const pokemon = ref(props.species)
   </div>
 </template>
 <style scoped>
-#status {
-
-}
-
 .status_marker {
   display: flex;
   width: 128px;

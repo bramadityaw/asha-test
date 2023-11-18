@@ -9,9 +9,19 @@ body {
   margin: 0 auto;
 }
 
-.bg-dark {
+.bg_dark {
   color: white;
   background-color: #242424;
+}
+
+.bg_white {
+  background-color: white;
+  color: black;
+}
+
+.bg_blue {
+  background-color: #007acc;
+  color: white;
 }
 
 .bg_red {
@@ -41,4 +51,17 @@ h1 + img.inline_img, h1 + .inline_img,
 img.inline_img:has(+ h1), .inline_img:has(+ h1) {
   height: 2em;
   aspect-ratio: 1;
+}
+
+.flex {
+  display: flex;
+}
+
+.card {
+  min-height: 178px;
+  min-width: 240px;
+  border-radius: 25px;
+  border: 2px solid grey;
+  padding: 1rem;
+  margin: 0 0.5rem 0.75rem;
 }
