@@ -19,6 +19,7 @@ const pokemon = ref(props.species)
       <span>{{ pokemon.dateCaptured }}</span>
     </div>
     <div v-if="!pokemon.isCaptured" class="status_marker inline_img">
+      <img src="/src/assets/pokeball_open.webp" alt="Released" />
       <span>{{ pokemon.dateReleased }}</span>
     </div>
   </div>
