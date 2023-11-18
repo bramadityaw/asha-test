@@ -1,17 +1,41 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted, reactive, computed } from 'vue'
 import PokemonImage from './PokemonImage.vue'
 import PokemonDetails from './PokemonDetails.vue'
 import PokemonStatus from './PokemonStatus.vue'
+import CatchButton from './CatchButton.vue'
 
-const pokemonList = ref([])
+const props = defineProps({
+  sortBy: String
+})
+
+const pokemonData = reactive({
+  list: [],
+  sortedList: computed(() => {
+    let sortedList = [...pokemonData.list]
+
+    if (props.sortBy == 'id') {
+      sortedList.sort((a, b) => a.entry_number - b.entry_number)
+    }
+
+    if (props.sortBy === 'name') {
+      sortedList.sort((a, b) => {
+        const nameA = a.pokemon_species.name.toUpperCase()
+        const nameB = b.pokemon_species.name.toUpperCase()
+        return nameA.localeCompare(nameB)
+      })
+    }
+
+    return sortedList
+  })
+})
 
 onMounted(async () => {
   const pokedexData = await fetch('https://pokeapi.co/api/v2/pokedex/1').then((response) =>
     response.json()
   )
 
-  pokemonList.value = pokedexData.pokemon_entries.map((pokemon) => ({
+  pokemonData.list = pokedexData.pokemon_entries.map((pokemon) => ({
     ...pokemon,
     isFavorite: false,
     dateFavorited: '',
@@ -28,22 +52,14 @@ function toggleFavorite(pokemon) {
     pokemon.dateFavorited = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
   }
 }
-
-function handlePokemonCapture(pokemon) {
-  if (pokemon.isCaptured) {
-    pokemon.isCaptured = false
-    const date = new Date()
-    pokemon.dateReleased = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
-    return
-  }
-  pokemon.isCaptured = true
-  const date = new Date()
-  pokemon.dateCaptured = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
-}
 </script>
 <template>
-  <div style="max-width: 520px; padding-top: 1.25rem;">
-    <div v-for="pokemon in pokemonList" class="card flex bg_white" :key="pokemon.entry_number">
+  <div style="max-width: 520px; padding-top: 1.25rem">
+    <div
+      v-for="pokemon in pokemonData.sortedList"
+      class="card flex bg_white"
+      :key="pokemon.entry_number"
+    >
       <div class="card_image">
         <PokemonImage :entry="pokemon.entry_number" />
       </div>
@@ -61,9 +77,7 @@ function handlePokemonCapture(pokemon) {
           <PokemonStatus :species="pokemon" />
         </div>
         <div id="actions">
-          <button class="button bg_purple" @click="handlePokemonCapture(pokemon)">
-            {{ pokemon.isCaptured ? 'Release' : 'Catch!' }}
-          </button>
+          <CatchButton :captive="pokemon"/>
           <button
             class="button"
             :class="{ bg_red: pokemon.isFavorite }"
