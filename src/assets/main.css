@@ -4,10 +4,6 @@ body {
   background-color: #1a1a1a;
 }
 
-h1, h2, h3 {
-  margin: 0;
-}
-
 #app {
   max-width: 1092px;
   margin: 0 auto;

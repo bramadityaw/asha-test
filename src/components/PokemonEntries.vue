@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import PokemonImage from './PokemonImage.vue'
 import PokemonDetails from './PokemonDetails.vue'
+import RollingLoader from './RollingLoader.vue'
 
 const pokemonList = ref([])
 
@@ -13,7 +14,8 @@ onMounted(async () => {
   pokemonList.value = pokedexData.pokemon_entries.map((pokemon) => ({
     ...pokemon,
     isFavorite: false,
-    dateFavorited: Date
+    dateFavorited: Date,
+    isCaptured: false
   }))
 })
 
@@ -22,12 +24,22 @@ function toggleFavorite(pokemon) {
   const date = new Date()
   pokemon.dateFavorited = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
 }
+
+function handlePokemonCapture(pokemon) {
+  if (pokemon.isCaptured) {
+    pokemon.isCaptured = false
+    return
+  }
+  pokemon.isCaptured = true
+}
 </script>
 <template>
-  <div style="columns: 2; max-width: 1020px; margin: 0 auto">
+  <div v-if="pokemonList.length">
+    <h3 style="text-align: center">Click and hold the 'Catch!' button to capture Pokémon!</h3>
+    <div style="columns: 2; max-width: 1020px; margin: 0 auto">
     <div v-for="pokemon in pokemonList" class="card bg-white" :key="pokemon.entry_number">
       <div class="card_image">
-        <PokemonImage :entry="pokemon.entry_number"></PokemonImage>
+        <PokemonImage :entry="pokemon.entry_number"/>
       </div>
       <div class="card-info">
         <div class="card_title">
@@ -39,14 +51,16 @@ function toggleFavorite(pokemon) {
           <span class="pokemon_id">ID: {{ pokemon.entry_number }}</span>
         </div>
         <div style="display: flex">
-          <PokemonDetails :entry="pokemon.entry_number"></PokemonDetails>
+          <PokemonDetails :entry="pokemon.entry_number"/>
           <div v-if="pokemon.isFavorite" class="fav_marker inline_img">
             <img src="/src/assets/star.webp" alt="Favorite" />
             <span>{{ pokemon.dateFavorited }}</span>
           </div>
         </div>
         <div id="actions">
-          <button class="button bg_purple">Catch!</button>
+          <button class="button bg_purple" @click="handlePokemonCapture(pokemon)">
+            {{ pokemon.isCaptured ? 'Release' : 'Catch!' }}
+          </button>
           <button
             class="button"
             :class="{ bg_red: pokemon.isFavorite }"
@@ -57,6 +71,10 @@ function toggleFavorite(pokemon) {
         </div>
       </div>
     </div>
+  </div>
+  </div>
+  <div v-else>
+    <RollingLoader/>
   </div>
 </template>
 <style scoped>
@@ -94,14 +112,7 @@ function toggleFavorite(pokemon) {
 
 .card h1 {
   font-size: 1.75em;
-}
-
-.card h2 {
-  font-size: 1.5em;
-}
-
-.card h3 {
-  font-size: 1.25em;
+  margin: 0;
 }
 
 #actions .button {

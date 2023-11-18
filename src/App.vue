@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import PokemonEntries from './components/PokemonEntries.vue'
 
-const title = ref('PokeDex Web')
+const title = ref('PokeDéx Web')
 </script>
 
 <template>
