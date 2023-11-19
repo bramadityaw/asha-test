@@ -7,32 +7,8 @@ import CatchButton from './CatchButton.vue'
 
 const props = defineProps({
   sortBy: String,
-  filter: String,
-})
-
-const pokemonData = reactive({
-  list: [],
-  sortedList: computed(() => {
-    let sortedList = [...pokemonData.list]
-
-    if (props.sortBy === 'id') {
-      sortedList.sort((a, b) => a.entry_number - b.entry_number)
-    }
-
-    if (props.sortBy === 'name') {
-      sortedList.sort((a, b) => {
-        const nameA = a.pokemon_species.name.toUpperCase()
-        const nameB = b.pokemon_species.name.toUpperCase()
-        return nameA.localeCompare(nameB)
-      })
-    }
-
-    if (props.filter.length > 0) {
-      sortedList = sortedList.filter(pokemon => pokemon.pokemon_species.name.includes(props.filter))
-    }
-
-    return sortedList
-  })
+  filterName: String,
+  filterTypes: Object
 })
 
 onMounted(async () => {
@@ -58,9 +34,64 @@ function toggleFavorite(pokemon) {
     pokemon.dateFavorited = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
   }
 }
+
+const pokemonData = reactive({
+  list: [],
+  sortedList: computed(() => {
+    let sortedList = [...pokemonData.list]
+
+    if (props.sortBy === 'id') {
+      sortedList.sort((a, b) => a.entry_number - b.entry_number)
+    }
+
+    if (props.sortBy === 'name') {
+      sortedList.sort((a, b) => {
+        const nameA = a.pokemon_species.name.toUpperCase()
+        const nameB = b.pokemon_species.name.toUpperCase()
+        return nameA.localeCompare(nameB)
+      })
+    }
+
+    if (props.filterName.length) {
+      sortedList = sortedList.filter((pokemon) =>
+        pokemon.pokemon_species.name.includes(props.filterName)
+      )
+    }
+
+    if (props.filterTypes.firstType.length > 0) {
+      const filteredByFirstType = sortedList.filter((pokemon) => {
+        const firstType = pokemon.types[0]
+        return firstType && firstType.type.name === props.filterTypes.firstType
+      })
+
+      if (props.filterTypes.secondType.length === 0) {
+        sortedList = filteredByFirstType
+        return sortedList
+      }
+
+      sortedList = filteredByFirstType.filter(
+        (pokemon) => {
+          const secondType = pokemon.types[1]
+          return secondType && secondType.type.name === props.filterTypes.secondType
+        }
+      )
+    }
+
+    return sortedList
+  })
+})
+
+function setPokemonTypes(entry, types) {
+  const pokemon = pokemonData.list.find((pokemon) => pokemon.entry_number === entry)
+  if (pokemon) {
+    pokemon.types = types
+  }
+}
 </script>
 <template>
-  <div style="padding-top: 1.25rem; min-width: 440px;">
+  <div style="padding-top: 1.25rem; min-width: 440px">
+    <p>{{ pokemonData.sortedList[0] }}</p>
+    <p>{{ filterTypes }}</p>
     <div
       v-for="pokemon in pokemonData.sortedList"
       class="card flex bg_white"
@@ -79,11 +110,11 @@ function toggleFavorite(pokemon) {
           <span class="pokemon_id">ID: {{ pokemon.entry_number }}</span>
         </div>
         <div style="display: flex">
-          <PokemonDetails :entry="pokemon.entry_number" />
+          <PokemonDetails :entry="pokemon.entry_number" :setTypes="setPokemonTypes" />
           <PokemonStatus :species="pokemon" />
         </div>
         <div id="actions">
-          <CatchButton :captive="pokemon"/>
+          <CatchButton :captive="pokemon" />
           <button
             class="button"
             :class="{ bg_red: pokemon.isFavorite }"

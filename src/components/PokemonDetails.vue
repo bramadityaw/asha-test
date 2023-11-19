@@ -1,11 +1,12 @@
 <script setup>
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, watch } from 'vue'
 
 const props = defineProps({
-  entry: Number
+  entry: Number,
+  setTypes: Function
 })
 
-const pokemonDetails = reactive({ //Might add more detatls in the future
+const pokemonDetails = reactive({
   types: Array
 })
 
@@ -14,6 +15,17 @@ onMounted( async () => {
   .then(response => response.json())
 
   pokemonDetails.types = pokemonData.types
+
+  props.setTypes(props.entry, pokemonDetails.types)
+})
+
+watch(() => props.entry, async (newEntry) => {
+  const pokemonData = await fetch(`https://pokeapi.co/api/v2/pokemon/${newEntry}`)
+    .then(response => response.json())
+
+  pokemonDetails.types = pokemonData.types
+
+  props.setTypes(newEntry, pokemonDetails.types)
 })
 
 </script>

@@ -28,7 +28,7 @@ const pokemonTypesList = ref([
   'shadow'
 ])
 
-const filteredTypes = reactive({
+const filterTypes = reactive({
   firstType: '',
   secondType: ''
 })
@@ -56,14 +56,14 @@ const filterName = ref('')
 
             <p>Select up to 2 types</p>
             <div class="flex">
-              <select v-model="filteredTypes.firstType">
-                <option value="" disabled>--SELECT--</option>
+              <select v-model="filterTypes.firstType">
+                <option value="" disabled>--Slot 1--</option>
                 <option v-for="type in pokemonTypesList" :value="type" :key="type">
                   {{ type[0].toUpperCase() + type.slice(1) }}
                 </option>
               </select>
-              <select v-model="filteredTypes.secondType">
-                <option value="" disabled>--SELECT--</option>
+              <select v-model="filterTypes.secondType">
+                <option value="" disabled>--Slot 2--</option>
                 <option v-for="type in pokemonTypesList" :value="type" :key="type">
                   {{ type[0].toUpperCase() + type.slice(1) }}
                 </option>
@@ -75,7 +75,7 @@ const filterName = ref('')
         </div>
       </div>
 
-      <PokemonEntries :sortBy="sortOption" :filter="filterName"/>
+      <PokemonEntries :sortBy="sortOption" :filterName="filterName" :filterTypes="filterTypes"/>
     </div>
   </div>
 </template>
