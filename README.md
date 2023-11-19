@@ -1,35 +1,10 @@
-# vue-project
+# Pokedex Web App
 
-This template should help get you started developing with Vue 3 in Vite.
+This web app allows you to:
+- View all pokemon from the national pokedex
+- Catch each pokemon by clicking and holding the 'Catch!' button
+- Favorite a pokemon by adding a star
+- Search pokemon by name
+- Sort pokemon by name or ID
+- Filter pokemon using their types
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```

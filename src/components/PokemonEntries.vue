@@ -90,8 +90,6 @@ function setPokemonTypes(entry, types) {
 </script>
 <template>
   <div style="padding-top: 1.25rem; min-width: 440px">
-    <p>{{ pokemonData.sortedList[0] }}</p>
-    <p>{{ filterTypes }}</p>
     <div
       v-for="pokemon in pokemonData.sortedList"
       class="card flex bg_white"
