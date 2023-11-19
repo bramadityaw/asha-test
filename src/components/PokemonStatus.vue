@@ -6,7 +6,6 @@ const props = defineProps({
 })
 
 const pokemon = ref(props.species)
-
 </script>
 <template>
   <div id="status">
@@ -20,7 +19,12 @@ const pokemon = ref(props.species)
     </div>
     <div v-if="!pokemon.isCaptured" class="status_marker inline_img">
       <img src="/src/assets/pokeball_open.webp" alt="Released" />
-      <span>{{ pokemon.dateReleased }}</span>
+      <span v-if="pokemon.dateReleased">{{ pokemon.dateReleased }}</span>
+      <span v-else>
+        A wild
+        {{  pokemon.pokemon_species.name[0].toUpperCase() + pokemon.pokemon_species.name.slice(1)  }}
+        appeared!
+      </span>
     </div>
   </div>
 </template>
