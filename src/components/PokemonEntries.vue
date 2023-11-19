@@ -6,7 +6,8 @@ import PokemonStatus from './PokemonStatus.vue'
 import CatchButton from './CatchButton.vue'
 
 const props = defineProps({
-  sortBy: String
+  sortBy: String,
+  filter: String,
 })
 
 const pokemonData = reactive({
@@ -14,7 +15,7 @@ const pokemonData = reactive({
   sortedList: computed(() => {
     let sortedList = [...pokemonData.list]
 
-    if (props.sortBy == 'id') {
+    if (props.sortBy === 'id') {
       sortedList.sort((a, b) => a.entry_number - b.entry_number)
     }
 
@@ -24,6 +25,10 @@ const pokemonData = reactive({
         const nameB = b.pokemon_species.name.toUpperCase()
         return nameA.localeCompare(nameB)
       })
+    }
+
+    if (props.filter.length > 0) {
+      sortedList = sortedList.filter(pokemon => pokemon.pokemon_species.name.includes(props.filter))
     }
 
     return sortedList
@@ -41,7 +46,8 @@ onMounted(async () => {
     dateFavorited: '',
     isCaptured: false,
     dateCaptured: '',
-    dateReleased: ''
+    dateReleased: '',
+    types: []
   }))
 })
 
@@ -54,7 +60,7 @@ function toggleFavorite(pokemon) {
 }
 </script>
 <template>
-  <div style="max-width: 520px; padding-top: 1.25rem">
+  <div style="padding-top: 1.25rem; min-width: 440px;">
     <div
       v-for="pokemon in pokemonData.sortedList"
       class="card flex bg_white"

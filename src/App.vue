@@ -32,6 +32,8 @@ const filteredTypes = reactive({
   firstType: '',
   secondType: ''
 })
+
+const filterName = ref('')
 </script>
 
 <template>
@@ -42,23 +44,15 @@ const filteredTypes = reactive({
       <img src="/src/assets/pokeball.webp" alt="" class="inline_img" />
     </div>
     <h3 style="text-align: center">Click and hold the 'Catch!' button to capture Pokémon!</h3>
-    <div style="display: flex; justify-content: center">
+    <div class="pokedex">
       <div style="position: relative; top: 0">
         <div style="position: sticky; padding-top: 1.25rem; top: 0">
           <div class="card bg_white">
             <span>Sort By:</span>
-            <input
-              type="radio"
-              id="sortOption1"
-              value="id"
-              v-model="sortOption"
-              checked
-            />
+            <input type="radio" id="sortOption1" value="id" v-model="sortOption" checked />
             <label for="sortOption1">ID</label>
             <input type="radio" id="sortOption2" value="name" v-model="sortOption" />
             <label for="sortOption2">Name</label>
-            <input type="radio" id="sortOption3" value="type" v-model="sortOption" />
-            <label for="sortOption3">Type</label>
 
             <p>Select up to 2 types</p>
             <div class="flex">
@@ -75,13 +69,14 @@ const filteredTypes = reactive({
                 </option>
               </select>
             </div>
+
+            <input type="text" v-model="filterName" placeholder="Search Pokemon...">
           </div>
         </div>
       </div>
 
-      <PokemonEntries :sortBy="sortOption" />
-    
-  </div>
+      <PokemonEntries :sortBy="sortOption" :filter="filterName"/>
+    </div>
   </div>
 </template>
 
@@ -99,6 +94,11 @@ const filteredTypes = reactive({
   justify-content: center;
 }
 
+.pokedex {
+  margin: 0 auto;
+  max-width: 520px;
+}
+
 .title h1 {
   width: fit-content;
   margin: 0 1rem;
@@ -111,5 +111,13 @@ const filteredTypes = reactive({
 
 label {
   margin-bottom: 0.75em;
+}
+
+@media (width > 768px) {
+  .pokedex {
+  display: flex;
+  justify-content: center;
+  max-width: 1180px;
+}
 }
 </style>
